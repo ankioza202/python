@@ -3,6 +3,7 @@ import requests
 from bs4 import BeautifulSoup
 import operator
 
+# Words list in the dictionary
 def start(url):
     word_list=[]
     response=requests.get(url).text
@@ -16,14 +17,26 @@ def start(url):
             word_list.append(each_word)
     clean_up_words(word_list)
 
+# Remove symbols from Dictionary
 def clean_up_words(word_list):
-    clean_dic=[]
+    clean_words_dic=[]
     for word in word_list:
         symbols="!@#$%^&*()_\"'.]["
         for j in range(0,len(symbols)):
             word = word.replace(symbols[j],"")
         if len(word)>0:
-            print(word)
-            clean_dic.append(word)
+            clean_words_dic.append(word)
+    create_counter_words_dic(clean_words_dic)
+
+# count word from dictionary
+def create_counter_words_dic(clean_words_dic):
+    counter_words_dic={}
+    for word in clean_words_dic:
+        if word in counter_words_dic:
+            counter_words_dic[word]+=1
+        else:
+            counter_words_dic[word]=1
+    for key,value in sorted(counter_words_dic.items(),key=operator.itemgetter(1)):
+        print(key,value)
 
 start("http://techblog.ankitaoza.com/page/2/")
